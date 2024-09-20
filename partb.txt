@@ -1,0 +1,75 @@
+/*Author - Wing Hoy. Last edited on Jan 17, 2022 */
+/*-----------------DO NOT MODIFY--------*/
+.global Sort
+.global printf
+.global cr
+.extern value
+.extern getstring
+.syntax unified
+
+.text
+Sort:
+/*-----------------Students write their subroutine here--------------------*/
+PUSH {lr}
+PUSH {r0}
+PUSH {r1}
+PUSH {r2}
+PUSH {r3}
+PUSH {r4}
+PUSH {r5}
+PUSH {r6}
+PUSH {r7}
+
+ldr r4, [sp, #36] //loads the number of entries into r4 (length)
+ldr r5,=0x20001000 //loads starting address
+mov r6, r4 // outer loop counter
+
+Outer:
+sub r6, #1 //decrement counter (n-1)
+cmp r6, #0
+beq end
+
+ldr r5,=0x20001000 //reset memory address
+mov r7, r4
+sub r7, #1
+
+Inner:
+ldr r8,[r5] //loads first comparision value
+ldr r9,[r5,#4] //loads second comparision value
+
+cmp r8, r9 //if r8 is larger than r9 then swap
+bhi swap
+add r5,#4
+
+sub r7, #1
+cmp r7, #0
+beq Outer
+b Inner
+
+swap:
+str r9, [r5]
+str r8, [r5,#4]
+add r5,#4
+
+sub r7, #1
+cmp r7, #0
+beq Outer
+b Inner
+
+end:
+str r4,[sp,#36]
+POP {r7}
+POP {r6}
+POP {r5}
+POP {r4}
+POP {r3}
+POP {r2}
+POP {r1}
+POP {r0}
+POP {PC}
+
+/*-------Code ends here ---------------------*/
+
+/*-----------------DO NOT MODIFY--------*/
+.data
+/*--------------------------------------*/

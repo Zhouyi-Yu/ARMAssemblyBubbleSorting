@@ -1,0 +1,78 @@
+/*Author - Wing Hoy. Last edited on Mar 22, 2022 */
+/*-----------------DO NOT MODIFY--------*/
+.global Welcomeprompt
+.global printf
+.global cr
+.extern value
+.extern getstring
+.extern getchar
+.extern putchar
+.syntax unified
+
+.text
+Welcomeprompt:
+/*--------------------------------------*/
+
+/*-------Students write their code here ------------*/
+PUSH {lr}
+
+ldr r0, =Welcomemsg
+bl printf
+bl cr
+
+input:
+ldr r0, =InputPrompt
+bl printf
+bl cr
+
+bl getchar
+mov r5,r0
+bl putchar
+bl cr
+
+
+cmp r5, #48
+blo invalid
+
+cmp r5, #57
+blo displaymsg
+
+cmp r5, #65
+blo invalid
+
+cmp r5, #90
+blo displaymsg
+
+
+invalid:
+ldr r0, =Invalid
+bl printf
+bl cr
+b input
+
+displaymsg:
+ldr r0, =Display
+bl printf
+mov r0, r5
+bl putchar
+bl cr
+
+End:
+str r5, [sp, #4]
+pop {PC}
+
+/*-----------------DO NOT MODIFY--------*/
+
+.data
+/*--------------------------------------*/
+Welcomemsg:
+.string "Wecome to by 8x8 Matrix program"
+
+InputPrompt:
+.string "please enter an UpperCase letter or number from the keyboard"
+
+Invalid:
+.string "Invalid entry, please enter proper input from keyboard"
+
+Display:
+.string "Displaying the pattern "
