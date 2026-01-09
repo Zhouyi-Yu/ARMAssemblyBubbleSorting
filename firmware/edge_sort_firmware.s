@@ -1,0 +1,100 @@
+/*Author - Wing Hoy. Last edited on Mar 22, 2022 */
+/*-----------------DO NOT MODIFY--------*/
+.global Display
+.global printf
+.global cr
+.extern value
+.extern getstring
+.extern offled()
+.extern onled()
+.extern column()
+.extern Column()
+.extern row()
+.extern Row()
+.syntax unified
+
+.text
+Display:
+/*--------------------------------------*/
+
+/*-------Students write their code here ------------*/
+PUSH {lr}
+ldr r7, [sp, #4]
+mov r6, #0 //counter == 0
+
+outer:
+mov r0, #0
+
+mov r1, #7 //column
+mov r2, #0 //row
+mov r3, #0 //delay
+mov r5, #0 //offset
+add r6, #10 //coutner
+
+cmp r6, #5 //repeat this many times
+beq end
+
+ldr r4,[r7, r5]
+inner:
+
+LED:
+lsrs r4, #1
+BCS led_on
+sub r1, #1
+cmp r1, #0
+blt next_row
+b LED
+
+
+next_row:
+mov r1, #7
+add r2, #1
+cmp r2, #4
+beq add
+cmp r2, #8
+beq outer
+b inner
+
+add:
+add r5, #4
+ldr r4,[r7,r5]
+b inner
+
+
+led_on:
+
+mov r0, r1
+push {r0-r7}
+bl column
+pop {r0-r7}
+
+mov r0, r2
+push {r0-r7}
+bl row
+pop {r0-r7}
+
+push {r0-r7}
+bl onled
+pop {r0-r7}
+
+mov r0, r3
+push {r0-r7}
+bl HAL_Delay
+pop {r0-r7}
+
+push {r0-r7}
+bl offled
+pop {r0-r7}
+
+sub r1, #1
+cmp r1, #0
+blt next_row
+
+b LED
+
+end:
+/*-------Code ends here ---------------------*/
+
+/*-----------------DO NOT MODIFY--------*/
+.data
+/*--------------------------------------*/
